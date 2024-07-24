@@ -12,35 +12,33 @@ module mux4x1s (
 endmodule
 
 
-module mux4x1b(
-    input [3:0] in, input [1:0] s, output reg out
+module mux16x1s (
+    input [15:0] in, input [3:0] s, output out
 );
-    always @(*) begin
-        case (s)
-            2'b00: out <= in[3];
-            2'b01: out <= in[2];
-            2'b10: out <= in[1];
-            2'b11: out <= in[0];
-        endcase
-    end
+    wire [3:0] t;
+    mux4x1s m1 (.in(in[3:0]), .s(s[1:0]), .out(t[0]));
+    mux4x1s m2 (.in(in[7:4]), .s(s[1:0]), .out(t[1]));
+    mux4x1s m3 (.in(in[11:8]), .s(s[1:0]), .out(t[2]));
+    mux4x1s m4 (.in(in[15:12]), .s(s[1:0]), .out(t[3]));
+    mux4x1s m5 (.in(t), .s(s[3:2]), .out(out));
 endmodule
 
 
-module mux4x1_tb;
-    reg [3:0] in;
-    reg [1:0] s;
+module mux16x1_tb;
+    reg [15:0] in;
+    reg [3:0] s;
     wire out;
 
-    mux4x1s uut (
+    mux16x1s uut (
         .in(in),
         .s(s),
         .out(out)
     );
 
     initial begin
-        in = 4'b0011; 
-        for (integer i = 0; i < 4; i = i + 1) begin
-            s = i[1:0];
+        in = 16'b0011_0000_0000_1110; 
+        for (integer i = 0; i < 16; i = i + 1) begin
+            s = i[3:0];
             #10
             $display("in=%b, s=%b, out=%b", in, s, out);
         end
