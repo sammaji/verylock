@@ -16,13 +16,19 @@ module not_tb;
 
     initial begin
         a = 10;
+
+        $monitor("a=%b, b=%b", a, b);
         #10;
-        $display("a=%b, b=%b", a, b);
 
         a=1;
-        #10;
-        $display("a=%b, b=%b", a, b);
 
+        #10;
+        a=10;
+
+        #10;
+        a=1;
+
+        #10;
         $finish;
     end
 endmodule
